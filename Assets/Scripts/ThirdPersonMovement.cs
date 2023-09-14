@@ -5,81 +5,72 @@ using UnityEngine.InputSystem;
 
 
 [RequireComponent(typeof(CharacterController))]
-
 public class ThirdPersonMovement : MonoBehaviour
 {
 
     private CharacterController controller;
-    private Vector2 input;
-    private Vector3 direction;
-    private float currentVelocity;
+    private Transform cameraMainTransform;
+
     private float gravity = -9.81f;
-    private float velocity;
+    private Vector3 playerVelocity;
+    private bool groundedPlayer;
+    private bool jumpPressed;
     
-    [SerializeField] private float speed = 1.0f;
-    [SerializeField] private float smoothTime = 0.05f;
-    [SerializeField] private float gravityMultiplier = 3.0f;
+    [SerializeField] private float playerSpeed = 1.0f;
     [SerializeField] private float jumpMultiplier = 1.0f;
+    [SerializeField] private float rotationSpeed = 4.0f;
+    [SerializeField] private InputActionReference movementControl;
+    [SerializeField] private InputActionReference jumpControl;
 
 
     private void Awake()
     {
         controller = GetComponent<CharacterController>();
+        cameraMainTransform = Camera.main.transform;
     }
 
     // Update is called once per frame
     void Update()
     {
-        ApplyGravity();
-        ApplyRotation();
-        ApplyMovement();
-        
-    }
+        Vector2 movement = movementControl.action.ReadValue<Vector2>();
 
-    private void ApplyGravity()
-    {
-        if(controller.isGrounded && velocity < 0.0f)
+        // Rotation
+        if (movement != Vector2.zero)
         {
-            velocity = -1.0f;
-        } else
-        {
-            velocity += gravity * gravityMultiplier * Time.deltaTime;
-        }
-        direction.y = velocity;
-    }
-
-    private void ApplyRotation()
-    {
-        if (input.sqrMagnitude == 0) return;
-
-        var targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
-        var angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref currentVelocity, smoothTime);
-
-        transform.rotation = Quaternion.Euler(0.0f, angle, 0.0f);
-    }
-
-    private void ApplyMovement()
-    {
-        controller.Move(direction * speed * Time.deltaTime);
-    }
-
-    public void Move(InputAction.CallbackContext context)
-    {
-        input = context.ReadValue<Vector2>();
-        direction = new Vector3(input.x, 0.0f, input.y);
-    }
-
-    public void Jump(InputAction.CallbackContext context)
-    {
-        if (!context.started)
-        {
-            return;
+            float targetAngle = Mathf.Atan2(movement.x, movement.y) * Mathf.Rad2Deg + cameraMainTransform.eulerAngles.y;
+            Quaternion rotation = Quaternion.Euler(0f, targetAngle, 0f);
+            transform.rotation = Quaternion.Lerp(transform.rotation, rotation, Time.deltaTime * rotationSpeed);
         }
 
-        if (!controller.isGrounded)
+        // Movement
+        Vector3 move = new Vector3(movement.x, 0f, movement.y);
+        move = cameraMainTransform.forward * move.z + cameraMainTransform.right * move.x;
+        move.y = 0f;
+        move *= playerSpeed;
+
+        // Jumping
+        groundedPlayer = controller.isGrounded;
+        if (groundedPlayer)
         {
-            return;
+            playerVelocity.y = 0.0f;
+
+            if (jumpPressed)
+            {
+                playerVelocity.y += Mathf.Sqrt(jumpMultiplier * -1.0f * gravity);
+                jumpPressed = false;
+            }
         }
-        velocity += jumpMultiplier;
+        playerVelocity.y += gravity * Time.deltaTime;
+
+        // Move Controller
+        controller.Move((playerVelocity + move) * Time.deltaTime);
+    }
+
+    private void OnJump()
+    {
+        if(controller.velocity.y == 0)
+        {
+            jumpPressed = true;    
+        }
     }
 }

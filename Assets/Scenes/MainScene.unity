@@ -394,7 +394,7 @@ MonoBehaviour:
   m_YAxis:
     Value: 0
     m_SpeedMode: 0
-    m_MaxSpeed: 0.75
+    m_MaxSpeed: 0.5
     m_AccelTime: 0.2
     m_DecelTime: 0.1
     m_InputAxisName: Mouse Y
@@ -418,7 +418,7 @@ MonoBehaviour:
   m_XAxis:
     Value: 0
     m_SpeedMode: 0
-    m_MaxSpeed: 180
+    m_MaxSpeed: 150
     m_AccelTime: 0.1
     m_DecelTime: 0.1
     m_InputAxisName: Mouse X
@@ -443,7 +443,7 @@ MonoBehaviour:
     m_RecenteringTime: 2
     m_LegacyHeadingDefinition: -1
     m_LegacyVelocityFilterStrength: -1
-  m_BindingMode: 5
+  m_BindingMode: 4
   m_SplineCurvature: 0.2
   m_Orbits:
   - m_Height: 3
@@ -466,7 +466,7 @@ Transform:
   m_GameObject: {fileID: 642153085}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.0219624, y: -0.24000001, z: 0.3200884}
+  m_LocalPosition: {x: 3.045, y: -0.24000001, z: 0.31999993}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -489,7 +489,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlayerIndex: -1
   AutoEnableInputs: 1
-  XYAxis: {fileID: -5630151704836100654, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  XYAxis: {fileID: -2935192962565052375, guid: 6b0f14edb3c24934aaa83bd1d104d1d5, type: 3}
   ZAxis: {fileID: 0}
 --- !u!114 &642153089
 MonoBehaviour:
@@ -594,7 +594,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9384ab8608cdc3d479fe89cd51eed48f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_BindingMode: 5
+  m_BindingMode: 4
   m_FollowOffset: {x: 0, y: 0.7, z: -3}
   m_XDamping: 1
   m_YDamping: 1
@@ -828,8 +828,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.096181005, y: 0.003821831, z: 0.00036930238, w: 0.9953565}
-  m_LocalPosition: {x: 3.0219624, y: -0.24000001, z: 0.3200884}
+  m_LocalRotation: {x: -0.09618171, y: 0.000000008563306, z: 8.2746965e-10, w: 0.99536383}
+  m_LocalPosition: {x: 3.045, y: -0.24000001, z: 0.31999993}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -884,7 +884,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1127313893}
   - component: {fileID: 1127313892}
-  - component: {fileID: 1127313895}
   - component: {fileID: 1127313894}
   m_Layer: 0
   m_Name: Player
@@ -947,72 +946,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10821da905cae654aa7eb3df1a1c92de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 4
-  smoothTime: 0.05
+  playerSpeed: 5
   gravityMultiplier: 1
-  jumpMultiplier: 4
---- !u!114 &1127313895
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1127313891}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: 6b0f14edb3c24934aaa83bd1d104d1d5, type: 3}
-  m_NotificationBehavior: 2
-  m_UIInputModule: {fileID: 0}
-  m_DeviceLostEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_DeviceRegainedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ControlsChangedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ActionEvents:
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1127313894}
-        m_TargetAssemblyTypeName: ThirdPersonMovement, Assembly-CSharp
-        m_MethodName: Move
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: be463149-48c9-495f-9f58-178abcb69180
-    m_ActionName: Player/Move[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1127313894}
-        m_TargetAssemblyTypeName: ThirdPersonMovement, Assembly-CSharp
-        m_MethodName: Jump
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 1f8ff578-2663-40f5-b561-d7536dda9737
-    m_ActionName: Player/Jump[/Keyboard/space]
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
-  m_DefaultActionMap: Player
-  m_SplitScreenIndex: -1
-  m_Camera: {fileID: 0}
+  jumpMultiplier: 3
+  movementControl: {fileID: 2287413754534704529, guid: 6b0f14edb3c24934aaa83bd1d104d1d5, type: 3}
+  jumpControl: {fileID: -8263311928966175310, guid: 6b0f14edb3c24934aaa83bd1d104d1d5, type: 3}
 --- !u!1 &1165418334
 GameObject:
   m_ObjectHideFlags: 3
@@ -1084,7 +1022,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1165418334}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.049813353, y: 0.0038348911, z: 0.00019126764, w: 0.9987512}
+  m_LocalRotation: {x: -0.04981369, y: 0.000000017455758, z: 8.706165e-10, w: 0.99875855}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1163,7 +1101,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1298129788}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.096181005, y: 0.0038218356, z: 0.00036930284, w: 0.9953565}
+  m_LocalRotation: {x: -0.09618171, y: 0.0000000042816524, z: 4.1373477e-10, w: 0.99536383}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1301,7 +1239,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9384ab8608cdc3d479fe89cd51eed48f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_BindingMode: 5
+  m_BindingMode: 4
   m_FollowOffset: {x: 0, y: 0.7, z: -3}
   m_XDamping: 1
   m_YDamping: 1
@@ -1426,7 +1364,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1906479220}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.073067136, y: 0.0038293768, z: 0.0002805536, w: 0.99731964}
+  m_LocalRotation: {x: -0.07306768, y: -0, z: -0, w: 0.997327}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1507,7 +1445,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9384ab8608cdc3d479fe89cd51eed48f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_BindingMode: 5
+  m_BindingMode: 4
   m_FollowOffset: {x: 0, y: 0.7, z: -3}
   m_XDamping: 1
   m_YDamping: 1
