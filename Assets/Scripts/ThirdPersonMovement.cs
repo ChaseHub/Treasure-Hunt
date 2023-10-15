@@ -3,74 +3,108 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-
-[RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(CharacterController), typeof(PlayerInput))]
 public class ThirdPersonMovement : MonoBehaviour
 {
+    [SerializeField]
+    private float playerSpeed = 2.0f;
+    [SerializeField]
+    private float sprintSpeed = 4.0f;
+    [SerializeField]
+    private float jumpHeight = 1.0f;
+    [SerializeField]
+    private float gravityValue = -9.18f;
+    [SerializeField]
+    private float rotationSpeed = 5f;
 
     private CharacterController controller;
-    private Transform cameraMainTransform;
+    private PlayerInput playerInput;
+    private Animator anim;
 
-    private float gravity = -9.81f;
     private Vector3 playerVelocity;
     private bool groundedPlayer;
-    private bool jumpPressed;
-    
-    [SerializeField] private float playerSpeed = 1.0f;
-    [SerializeField] private float jumpMultiplier = 1.0f;
-    [SerializeField] private float rotationSpeed = 4.0f;
-    [SerializeField] private InputActionReference movementControl;
-    [SerializeField] private InputActionReference jumpControl;
+    private Transform cameraTransform;
 
+    private InputAction moveAction;
+    private InputAction jumpAction;
+    private InputAction sprintAction;
 
-    private void Awake()
+    // Start is called before the first frame update
+    void Start()
     {
         controller = GetComponent<CharacterController>();
-        cameraMainTransform = Camera.main.transform;
+        playerInput = GetComponent<PlayerInput>();
+        anim = GetComponentInChildren<Animator>();
+        cameraTransform = Camera.main.transform;
+        moveAction = playerInput.actions["Move"];
+        jumpAction = playerInput.actions["Jump"];
+        sprintAction = playerInput.actions["Sprint"];
+
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     // Update is called once per frame
     void Update()
     {
-        Vector2 movement = movementControl.action.ReadValue<Vector2>();
-
-        // Rotation
-        if (movement != Vector2.zero)
+        groundedPlayer = controller.isGrounded;
+        if(groundedPlayer && playerVelocity.y < 0)
         {
-            float targetAngle = Mathf.Atan2(movement.x, movement.y) * Mathf.Rad2Deg + cameraMainTransform.eulerAngles.y;
-            Quaternion rotation = Quaternion.Euler(0f, targetAngle, 0f);
-            transform.rotation = Quaternion.Lerp(transform.rotation, rotation, Time.deltaTime * rotationSpeed);
+            playerVelocity.y = 0f;
         }
 
-        // Movement
-        Vector3 move = new Vector3(movement.x, 0f, movement.y);
-        move = cameraMainTransform.forward * move.z + cameraMainTransform.right * move.x;
-        move.y = 0f;
-        move *= playerSpeed;
+        Vector2 input = moveAction.ReadValue<Vector2>();
+        Vector3 move = new Vector3(input.x, 0, input.y);
+        move = move.x * cameraTransform.right.normalized + move.z * cameraTransform.forward.normalized;
+        move.y = 0;
 
-        // Jumping
-        groundedPlayer = controller.isGrounded;
-        if (groundedPlayer)
+        if (move.x == 0 && move.y == 0 && groundedPlayer)
         {
-            playerVelocity.y = 0.0f;
-
-            if (jumpPressed)
+            Idle();
+        }
+        else if (sprintAction.ReadValue<float>() > 0 && groundedPlayer)
+        {
+            controller.Move(move * Time.deltaTime * playerSpeed * sprintSpeed);
+            Sprint();
+        }
+        else
+        {
+            controller.Move(move * Time.deltaTime * playerSpeed);
+            if (groundedPlayer)
             {
-                playerVelocity.y += Mathf.Sqrt(jumpMultiplier * -1.0f * gravity);
-                jumpPressed = false;
+                Walk();
             }
         }
-        playerVelocity.y += gravity * Time.deltaTime;
 
-        // Move Controller
-        controller.Move((playerVelocity + move) * Time.deltaTime);
+        if (jumpAction.triggered && groundedPlayer)
+        {
+            playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
+            Jump();
+        }
+
+        playerVelocity.y += gravityValue * Time.deltaTime;
+        controller.Move(playerVelocity * Time.deltaTime);
+
+        Quaternion targetRotation = Quaternion.Euler(0, cameraTransform.eulerAngles.y, 0);
+        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
     }
 
-    private void OnJump()
+    public void Idle()
     {
-        if(controller.velocity.y == 0)
-        {
-            jumpPressed = true;    
-        }
+        anim.SetFloat("Speed", 0f);
+    }
+
+    public void Walk()
+    {
+        anim.SetFloat("Speed", .3333f);
+    }
+
+    public void Sprint()
+    {
+        anim.SetFloat("Speed", .6666f);
+    }
+
+    public void Jump()
+    {
+        anim.SetFloat("Speed", 1f);
     }
 }
